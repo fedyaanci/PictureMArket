@@ -1,0 +1,17 @@
+from sqlalchemy import Integer, ForeignKey, Boolean, Column, Numeric, TIMESTAMP
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from . import Base
+
+class Listing(Base):
+    __tablename__ = "listing"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    artwork_id = Column(Integer, ForeignKey('artwork.id'), nullable=False)
+    seller_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    price = Column(Numeric(10, 2))
+    is_sold = Column(Boolean, default=False)
+    created_at = Column(TIMESTAMP, default=datetime.now)
+    sold_at = Column(TIMESTAMP, nullable=True)  
+
+    order = relationship("Order", backref="listing", uselist=False)
