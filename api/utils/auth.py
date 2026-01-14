@@ -21,14 +21,15 @@ def create_access_token(user_id: int)->str:
 
     expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    payload = {
+    payload = { # кто и до какого времени
         "user_id": user_id,
         "exp": expire
     }
 
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM) # подписывает payload - возвращает строку-токен
 
-async def get_current_user(
+
+async def get_current_user( #эндпоинтам нужно знать, кто делает запрос
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ):

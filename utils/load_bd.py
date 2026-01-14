@@ -21,21 +21,20 @@ from sqlalchemy import select
 async def LoadDataToTable(obj):
     async with SessionLocal() as session:
         try:
-            existing_count = await session.execute(select(Category))
+            existing_count = await session.execute(select(User))
             if existing_count.scalars().first() is not None:
-                print("✅ Категории уже загружены. Пропускаем.")
+                print("Уже загружено")
                 return
 
-            # Добавляем новые категории
             for name in CATEGORIES:
                 category = Category(name=name)
                 session.add(category)
             
             await session.commit()
-            print(f"✅ Успешно добавлено {len(CATEGORIES)} категорий.")
+            print(f"Успешно добавлено {len(CATEGORIES)} категорий.")
 
         except Exception as e:
-            print(f"❌ Ошибка при загрузке категорий: {e}")
+            print(f"Ошибка при загрузке категорий: {e}")
             await session.rollback()
             raise
 
