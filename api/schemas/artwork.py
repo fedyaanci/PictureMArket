@@ -4,7 +4,6 @@ from datetime import datetime
 class ArtworkBase(BaseModel):
     title: str
     image_url: str
-    artist_id: int
 
 class ArtworkCreate(ArtworkBase):
     pass
