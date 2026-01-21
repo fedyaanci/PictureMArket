@@ -61,7 +61,6 @@ async def LoadArtworksBegin():
 async def seed_artworks_without_listing():
     async with SessionLocal() as session:
         try:
-            # Проверяем, не добавлены ли уже
             existing = await session.execute(
                 select(Artwork).where(Artwork.title.in_(EXTRA_ARTWORKS))
             )

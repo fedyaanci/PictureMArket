@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select  
 from typing import List
+from sqlalchemy.orm import selectinload
 
 from api.schemas.artwork import ArtworkResponse
 from api.schemas.artwork import ArtworkCreate
@@ -22,6 +23,23 @@ async def get_artworks(db: AsyncSession = Depends(get_db) ):
         import traceback
         traceback.print_exc()
         return {'error': str(e), 'code': '500'}
+
+@router.get('/my', response_model=List[ArtworkResponse])
+async def get_my_artworks(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Получает работы текущего пользователя"""
+    if not current_user.is_artist:
+        raise HTTPException(status_code=403, detail='User is not artist!')
+    
+    result = await db.execute(
+        select(Artwork)
+        .where(Artwork.artist_id == current_user.id)
+        .options(selectinload(Artwork.listing))  
+    )
+    artworks = result.scalars().all()
+    return artworks
 
 @router.get('/{artwork_id}', response_model=ArtworkResponse)
 async def get_artwork(artwork_id: int, db: AsyncSession = Depends(get_db)):

@@ -10,7 +10,7 @@ from api.schemas.user import UserResponse, UserLogin, UserBase, UserCreate
 
 from api.utils.hash_pw import hash_password
 from api.utils.verify import verify_password
-from api.utils.auth import create_access_token, verify_token_and_get_user
+from api.utils.auth import create_access_token, verify_token_and_get_user, get_current_user
 
 router = APIRouter(prefix='/users', tags=['users'])
 
@@ -88,4 +88,17 @@ async def login(
 
     access_token = create_access_token(user_id=user.id)
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/balance/topup")
+async def topup_balance(
+    amount: float,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Сумма должна быть положительной")
+    
+    current_user.balance += amount
+    await db.commit()
+    return {"balance": current_user.balance}
 

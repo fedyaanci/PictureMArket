@@ -9,9 +9,10 @@ class UserBase(BaseModel):
     username: str
     is_artist: bool = False
     avatar_url: str | None = None
+    balance: float = 0.0
 
 class UserCreate(UserBase):
-    password: str #(открытый парорль только для входа)
+    password: str
 
 class UserUpdate(UserBase):
     password_hash: str | None = None
