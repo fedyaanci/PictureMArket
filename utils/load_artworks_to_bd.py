@@ -2,7 +2,6 @@ from core.database_config import SessionLocal
 from models.artwork import Artwork
 from models.listing import Listing
 from sqlalchemy import select
-import asyncio
 
 ARTWORK_TITLES = [
     "CosmicCat",
@@ -14,14 +13,11 @@ ARTWORK_TITLES = [
     "CloudDreams",
     "CyberSamurai",
     "DeepOcean",
-    "FantasyLibrary"
+    "FantasyLibrary",
 ]
 
-EXTRA_ARTWORKS = [
-    "SilentMoon",
-    "ElectricFlower",
-    "NeonDragon"
-]
+EXTRA_ARTWORKS = ["SilentMoon", "ElectricFlower", "NeonDragon"]
+
 
 async def LoadArtworksBegin():
     async with SessionLocal() as session:
@@ -30,12 +26,12 @@ async def LoadArtworksBegin():
 
             if existing.scalars().first() is not None:
                 return
-            
+
             artist_id = 38
 
             for i, title in enumerate(ARTWORK_TITLES):
                 artwork = Artwork(
-                    title = title.replace(' ', '_'),
+                    title=title.replace(" ", "_"),
                     image_url=f"/uploads/artworks/{title}.jpg",
                     artist_id=artist_id,
                 )
@@ -52,11 +48,12 @@ async def LoadArtworksBegin():
 
                 await session.commit()
 
-                print('Творчество загружено!')
+                print("Творчество загружено!")
         except Exception as e:
             print(f"Ошибка: {e}")
             await session.rollback()
             raise
+
 
 async def seed_artworks_without_listing():
     async with SessionLocal() as session:
@@ -74,7 +71,7 @@ async def seed_artworks_without_listing():
                 artwork = Artwork(
                     title=title,
                     image_url=f"/uploads/artworks/{title}.jpg",
-                    artist_id=artist_id
+                    artist_id=artist_id,
                 )
                 session.add(artwork)
 

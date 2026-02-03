@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class UserLogin(BaseModel):
     username: str
     password: str
+
 
 class UserBase(BaseModel):
     username: str
@@ -11,11 +13,14 @@ class UserBase(BaseModel):
     avatar_url: str | None = None
     balance: float = 0.0
 
+
 class UserCreate(UserBase):
     password: str
 
+
 class UserUpdate(UserBase):
     password_hash: str | None = None
+
 
 class UserResponse(UserBase):
     id: int

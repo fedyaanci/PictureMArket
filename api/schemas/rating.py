@@ -1,13 +1,16 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class RatingBase(BaseModel):
     artist_id: int
     reviewer_id: int
-    score: int  
+    score: int
+
 
 class RatingCreate(RatingBase):
     pass
+
 
 class RatingResponse(RatingBase):
     id: int

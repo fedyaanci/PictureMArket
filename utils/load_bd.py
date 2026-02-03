@@ -1,3 +1,9 @@
+"""
+Скрипт для загрузки демо-данных в базу при первом запуске.
+Не запускать на проде!
+"""
+
+from sqlalchemy import select
 from models.user import User
 from models.category import Category
 from core.database_config import SessionLocal
@@ -12,11 +18,9 @@ CATEGORIES = [
     "Сюрреализм",
     "Комиксы",
     "Цифровая живопись",
-    "3D-арт"
+    "3D-арт",
 ]
 
-import asyncio
-from sqlalchemy import select
 
 async def LoadDataToTable(obj):
     async with SessionLocal() as session:
@@ -29,7 +33,7 @@ async def LoadDataToTable(obj):
             for name in CATEGORIES:
                 category = Category(name=name)
                 session.add(category)
-            
+
             await session.commit()
             print(f"Успешно добавлено {len(CATEGORIES)} категорий.")
 
@@ -37,6 +41,7 @@ async def LoadDataToTable(obj):
             print(f"Ошибка при загрузке категорий: {e}")
             await session.rollback()
             raise
+
 
 async def DownloadUsers():
     try:
@@ -48,15 +53,15 @@ async def DownloadUsers():
         print(f"Ошибка при получении пользователей: {e}")
         return None
 
+
 # asyncio.run(LoadDataToTable(CATEGORIES))
 
-#async def main():
-    # users = await DownloadUsers()
-    
-    # if users:
-    #     for user in users:
-    #         print(f"ID: {user.id}, Username: {user.username}, Is Artist: {user.is_artist}")
+# async def main():
+# users = await DownloadUsers()
+
+# if users:
+#     for user in users:
+#         print(f"ID: {user.id}, Username: {user.username}, Is Artist: {user.is_artist}")
 
 
-#asyncio.run(main())
-
+# asyncio.run(main())
